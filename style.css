@@ -1,0 +1,222 @@
+/* ==========================================
+   ESTILOS GENERALES Y TEMA WEB
+   ========================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #0f111a;
+    background-image: 
+        radial-gradient(circle at 50% 20%, rgba(255, 107, 107, 0.08) 0%, transparent 60%),
+        linear-gradient(to bottom, #0f111a 0%, #161925 100%);
+    color: #e2e8f0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 900px;
+    width: 100%;
+}
+
+/* ==========================================
+   ENCABEZADO Y TEXTOS
+   ========================================== */
+.game-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.badge {
+    display: inline-block;
+    background: rgba(255, 107, 107, 0.15);
+    color: #ff6b6b;
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+h1 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.8rem;
+    color: #ffffff;
+    text-shadow: 0 4px 12px rgba(255, 107, 107, 0.4), 3px 3px 0px #ff3366;
+    margin-bottom: 14px;
+    line-height: 1.3;
+}
+
+.description {
+    color: #94a3b8;
+    font-size: 0.95rem;
+    max-width: 580px;
+    line-height: 1.5;
+    margin: 0 auto;
+}
+
+/* ==========================================
+   ÁREA DE JUEGO Y MARCO ARCADE
+   ========================================== */
+.game-screen-wrapper {
+    background: #1a1d2d;
+    padding: 12px;
+    border-radius: 16px;
+    border: 2px solid #2e344e;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 107, 107, 0.1);
+    margin-bottom: 24px;
+}
+
+#game-area {
+    width: 800px;
+    height: 600px;
+    position: relative;
+    background-image: url('sprites2/fondo.png'); 
+    background-size: 100% 100%;       
+    background-position: center;
+    border: 3px solid #ff3366;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* ==========================================
+   CONFIGURACIÓN DE PERSONAJES Y SPRITES (75px)
+   ========================================== */
+.character {
+    width: 75px;
+    height: 75px;
+    position: absolute;
+    background-size: 300px 75px;
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+}
+
+/* ==========================================
+   KEYFRAMES DE ANIMACIÓN
+   ========================================== */
+@keyframes walkSprite {
+    from { background-position: 0px 0px; }
+    to { background-position: -300px 0px; }
+}
+
+@keyframes idleSprite {
+    from { background-position: 0px 0px; }
+    to { background-position: -300px 0px; }
+}
+
+/* ANIMACIONES AL CAMINAR */
+#adon.walking {
+    animation: walkSprite 0.45s steps(4) infinite;
+}
+
+#gordito.walking {
+    animation: walkSprite 0.75s steps(4) infinite;
+}
+
+/* ==========================================
+   SPRITES DE ADON (sprites2/adon/)
+   ========================================== */
+#adon.dir-abajo     { background-image: url('sprites2/adon/abajo.png'); }
+#adon.dir-arriba    { background-image: url('sprites2/adon/arriba.png'); }
+#adon.dir-izquierda { background-image: url('sprites2/adon/izquierda.png'); }
+#adon.dir-derecha   { background-image: url('sprites2/adon/derecha.png'); }
+
+#adon.dir-reposo {
+    background-image: url('sprites2/adon/risa.png');
+    animation: idleSprite 0.8s steps(4) infinite;
+}
+
+#adon.dir-llorando {
+    background-image: url('sprites2/adon/adonllorando.png');
+    animation: walkSprite 0.5s steps(4) infinite;
+}
+
+/* ==========================================
+   SPRITES DE GORDITO 
+   ========================================== */
+#gordito.dir-abajo     { background-image: url('sprites2/gordito/abajo.png'); }
+#gordito.dir-arriba    { background-image: url('sprites2/gordito/arriba.png'); }
+#gordito.dir-izquierda { background-image: url('sprites2/gordito/izquierda.png'); }
+#gordito.dir-derecha   { background-image: url('sprites2/gordito/derecha.png'); }
+
+#gordito.dir-reposo {
+    background-image: url('sprites2/gordito/reposo.png');
+    animation: idleSprite 1s steps(4) infinite;
+}
+
+#gordito.dir-mecanse {
+    background-image: url('sprites2/gordito/meCanse.png');
+    animation: idleSprite 0.8s steps(4) infinite;
+}
+
+@keyframes celebrateSprite {
+    from { background-position: 0px 0px; }
+    to { background-position: -400px 0px; }
+}
+
+#gordito.dir-celebrar {
+    background-image: url('sprites2/gordito/celebrar.png');
+    width: 100px;                 
+    height: 100px;                 
+    background-size: 400px 100px;  
+    animation: celebrateSprite 0.5s steps(4) infinite;
+}
+/* ==========================================
+   PANEL DE CONTROLES
+   ========================================== */
+.controls-panel {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.control-card {
+    background: #181b2a;
+    border: 1px solid #2a2f48;
+    padding: 10px 18px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.85rem;
+    color: #cbd5e1;
+}
+
+.control-card.highlight {
+    border-color: rgba(255, 107, 107, 0.4);
+    background: rgba(255, 107, 107, 0.05);
+}
+
+.key-group {
+    display: flex;
+    gap: 4px;
+}
+
+kbd {
+    background: #282d44;
+    color: #ffffff;
+    border: 1px solid #3d4566;
+    border-bottom: 3px solid #1a1d2d;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.65rem;
+}
+
+.control-card small {
+    color: #94a3b8;
+    font-size: 0.75rem;
+}
