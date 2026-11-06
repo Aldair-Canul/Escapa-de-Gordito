@@ -1,50 +1,95 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="style.css">
+
     <title>Escapa de Gordito</title>
 </head>
+
 <body>
 
     <div class="main-container">
-        <!-- ENCABEZADO Y SINOPSIS -->
+
+        <!-- ENCABEZADO -->
         <header class="game-header">
             <span class="badge">🕹️ MODO SUPERVIVENCIA</span>
+            <span class="badge">Elaborado por Aldair Canul y Aaron Chi ITS 5° A</span>
+
             <h1>ESCAPA DE GORDITO</h1>
+
             <p class="description">
-                A Gordito le encantan los abrazos efusivos... ¡pero a ti no! Usa tus reflejos y tu impulso para mantener la distancia.
+                A Gordito le encantan los abrazos Invasivos...
+                ¡pero a ti no! Usa tus reflejos y tu impulso
+                para mantener la distancia.
             </p>
         </header>
 
         <!-- ÁREA DE JUEGO -->
         <main class="game-screen-wrapper">
+
             <div id="game-area">
+
                 <div id="gordito" class="character"></div>
                 <div id="adon" class="character"></div>
+
+                <!-- CONTADOR -->
+                <div id="game-timer">
+                    ⏱️ <span id="time-left">35</span>s
+                </div>
+
+                <!-- MENÚ DE INICIO -->
+                <div id="game-menu">
+                    <h2>Preparate para Escapar!</h2>
+
+                    <p>
+                        Sobrevive a gordito durante 35 segundos.
+                    </p>
+
+                    <button id="btn-start">
+                        ▶ INICIAR JUEGO
+                    </button>
+                </div>
+
             </div>
+
         </main>
 
-        <!-- GUÍA DE CONTROLES -->
+        <!-- CONTROLES -->
         <footer class="controls-panel">
+
             <div class="control-card">
                 <div class="key-group">
-                    <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd>
+                    <kbd>↑</kbd>
+                    <kbd>↓</kbd>
+                    <kbd>←</kbd>
+                    <kbd>→</kbd>
                 </div>
+
                 <span>Mover a Adon</span>
             </div>
-            
+
             <div class="control-card highlight">
                 <div class="key-group">
                     <kbd>Shift</kbd>
                 </div>
-                <span>Dash / Impulso <small>(5s cooldown)</small></span>
+
+                <span>
+                    Dash / Impulso
+                    <small>(5s cooldown)</small>
+                </span>
             </div>
+
         </footer>
+
     </div>
 
     <script src="app.js"></script>

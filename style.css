@@ -1,6 +1,8 @@
+
 /* ==========================================
-   ESTILOS GENERALES Y TEMA WEB
+   ESTILOS GENERALES
    ========================================== */
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -9,12 +11,15 @@
 
 body {
     background-color: #0f111a;
-    background-image: 
-        radial-gradient(circle at 50% 20%, rgba(255, 107, 107, 0.08) 0%, transparent 60%),
-        linear-gradient(to bottom, #0f111a 0%, #161925 100%);
+    background-image:
+        radial-gradient(circle at 50% 20%,
+        rgba(255, 107, 107, 0.08) 0%, transparent 60%),
+        linear-gradient(to bottom, #0f111a, #161925);
+
     color: #e2e8f0;
     font-family: 'Plus Jakarta Sans', sans-serif;
     min-height: 100vh;
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -30,8 +35,9 @@ body {
 }
 
 /* ==========================================
-   ENCABEZADO Y TEXTOS
+   ENCABEZADO
    ========================================== */
+
 .game-header {
     text-align: center;
     margin-bottom: 24px;
@@ -41,9 +47,11 @@ body {
     display: inline-block;
     background: rgba(255, 107, 107, 0.15);
     color: #ff6b6b;
+
     border: 1px solid rgba(255, 107, 107, 0.3);
     padding: 6px 14px;
     border-radius: 20px;
+
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 1px;
@@ -54,7 +62,11 @@ h1 {
     font-family: 'Press Start 2P', cursive;
     font-size: 1.8rem;
     color: #ffffff;
-    text-shadow: 0 4px 12px rgba(255, 107, 107, 0.4), 3px 3px 0px #ff3366;
+
+    text-shadow:
+        0 4px 12px rgba(255, 107, 107, 0.4),
+        3px 3px 0px #ff3366;
+
     margin-bottom: 14px;
     line-height: 1.3;
 }
@@ -68,55 +80,63 @@ h1 {
 }
 
 /* ==========================================
-   ÁREA DE JUEGO Y MARCO ARCADE
+   ESCENARIO
    ========================================== */
+
 .game-screen-wrapper {
     background: #1a1d2d;
     padding: 12px;
     border-radius: 16px;
     border: 2px solid #2e344e;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 107, 107, 0.1);
+
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.6),
+        0 0 30px rgba(255, 107, 107, 0.1);
+
     margin-bottom: 24px;
+    max-width: 100%;
 }
 
 #game-area {
     width: 800px;
     height: 600px;
     position: relative;
-    background-image: url('sprites2/fondo.png'); 
-    background-size: 100% 100%;       
+
+    background-image: url('sprites2/fondo.png');
+    background-size: 100% 100%;
     background-position: center;
+
     border: 3px solid #ff3366;
     border-radius: 8px;
     overflow: hidden;
 }
 
 /* ==========================================
-   CONFIGURACIÓN DE PERSONAJES Y SPRITES (75px)
+   PERSONAJES Y SPRITES
    ========================================== */
+
 .character {
     width: 75px;
     height: 75px;
     position: absolute;
+
     background-size: 300px 75px;
     background-repeat: no-repeat;
-    background-position: 0px 0px;
+    background-position: 0 0;
 }
 
-/* ==========================================
-   KEYFRAMES DE ANIMACIÓN
-   ========================================== */
+/* ANIMACIONES */
+
 @keyframes walkSprite {
-    from { background-position: 0px 0px; }
-    to { background-position: -300px 0px; }
+    from { background-position: 0 0; }
+    to { background-position: -300px 0; }
 }
 
 @keyframes idleSprite {
-    from { background-position: 0px 0px; }
-    to { background-position: -300px 0px; }
+    from { background-position: 0 0; }
+    to { background-position: -300px 0; }
 }
 
-/* ANIMACIONES AL CAMINAR */
 #adon.walking {
     animation: walkSprite 0.45s steps(4) infinite;
 }
@@ -126,12 +146,24 @@ h1 {
 }
 
 /* ==========================================
-   SPRITES DE ADON (sprites2/adon/)
+   SPRITES DE ADON
    ========================================== */
-#adon.dir-abajo     { background-image: url('sprites2/adon/abajo.png'); }
-#adon.dir-arriba    { background-image: url('sprites2/adon/arriba.png'); }
-#adon.dir-izquierda { background-image: url('sprites2/adon/izquierda.png'); }
-#adon.dir-derecha   { background-image: url('sprites2/adon/derecha.png'); }
+
+#adon.dir-abajo {
+    background-image: url('sprites2/adon/abajo.png');
+}
+
+#adon.dir-arriba {
+    background-image: url('sprites2/adon/arriba.png');
+}
+
+#adon.dir-izquierda {
+    background-image: url('sprites2/adon/izquierda.png');
+}
+
+#adon.dir-derecha {
+    background-image: url('sprites2/adon/derecha.png');
+}
 
 #adon.dir-reposo {
     background-image: url('sprites2/adon/risa.png');
@@ -144,12 +176,24 @@ h1 {
 }
 
 /* ==========================================
-   SPRITES DE GORDITO 
+   SPRITES DE GORDITO
    ========================================== */
-#gordito.dir-abajo     { background-image: url('sprites2/gordito/abajo.png'); }
-#gordito.dir-arriba    { background-image: url('sprites2/gordito/arriba.png'); }
-#gordito.dir-izquierda { background-image: url('sprites2/gordito/izquierda.png'); }
-#gordito.dir-derecha   { background-image: url('sprites2/gordito/derecha.png'); }
+
+#gordito.dir-abajo {
+    background-image: url('sprites2/gordito/abajo.png');
+}
+
+#gordito.dir-arriba {
+    background-image: url('sprites2/gordito/arriba.png');
+}
+
+#gordito.dir-izquierda {
+    background-image: url('sprites2/gordito/izquierda.png');
+}
+
+#gordito.dir-derecha {
+    background-image: url('sprites2/gordito/derecha.png');
+}
 
 #gordito.dir-reposo {
     background-image: url('sprites2/gordito/reposo.png');
@@ -161,21 +205,25 @@ h1 {
     animation: idleSprite 0.8s steps(4) infinite;
 }
 
+/* CELEBRACIÓN */
+
 @keyframes celebrateSprite {
-    from { background-position: 0px 0px; }
-    to { background-position: -400px 0px; }
+    from { background-position: 0 0; }
+    to { background-position: -400px 0; }
 }
 
 #gordito.dir-celebrar {
     background-image: url('sprites2/gordito/celebrar.png');
-    width: 100px;                 
-    height: 100px;                 
-    background-size: 400px 100px;  
+    width: 100px;
+    height: 100px;
+    background-size: 400px 100px;
     animation: celebrateSprite 0.5s steps(4) infinite;
 }
+
 /* ==========================================
    PANEL DE CONTROLES
    ========================================== */
+
 .controls-panel {
     display: flex;
     gap: 16px;
@@ -188,6 +236,7 @@ h1 {
     border: 1px solid #2a2f48;
     padding: 10px 18px;
     border-radius: 12px;
+
     display: flex;
     align-items: center;
     gap: 12px;
@@ -210,8 +259,10 @@ kbd {
     color: #ffffff;
     border: 1px solid #3d4566;
     border-bottom: 3px solid #1a1d2d;
+
     padding: 4px 8px;
     border-radius: 6px;
+
     font-family: 'Press Start 2P', monospace;
     font-size: 0.65rem;
 }
@@ -219,4 +270,96 @@ kbd {
 .control-card small {
     color: #94a3b8;
     font-size: 0.75rem;
+}
+
+/* ==========================================
+   MENÚ DE INICIO
+   ========================================== */
+
+#game-menu {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+
+    background: rgba(15, 17, 26, 0.9);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 25px;
+    text-align: center;
+    padding: 20px;
+}
+
+#game-menu h2 {
+    font-family: 'Press Start 2P', cursive;
+    color: #ff6b6b;
+    font-size: 1.3rem;
+    line-height: 1.7;
+}
+
+#game-menu p {
+    color: #e2e8f0;
+    font-size: 1rem;
+}
+
+#btn-start {
+    background: #ff3366;
+    color: white;
+    border: 3px solid white;
+    border-radius: 8px;
+
+    padding: 18px 24px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+#btn-start:hover {
+    background: #ff6b6b;
+}
+
+/* ==========================================
+   CONTADOR
+   ========================================== */
+
+#game-timer {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 5;
+
+    background: rgba(15, 17, 26, 0.85);
+    color: white;
+
+    padding: 12px 15px;
+    border: 2px solid #ff3366;
+    border-radius: 8px;
+
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.9rem;
+}
+
+#game-timer[hidden] {
+    display: none;
+}
+
+/* ==========================================
+   ADAPTACIÓN DE TEXTOS
+   ========================================== */
+
+@media (max-width: 600px) {
+    h1 {
+        font-size: 1rem;
+    }
+
+    #game-menu h2 {
+        font-size: 0.9rem;
+    }
+
+    #btn-start {
+        font-size: 0.65rem;
+    }
 }
