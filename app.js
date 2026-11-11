@@ -1,4 +1,3 @@
-
 const adon = document.getElementById('adon');
 const gordito = document.getElementById('gordito');
 const gameArea = document.getElementById('game-area');
@@ -21,16 +20,21 @@ risaSound.preload = 'auto';
 loserSound.preload = 'auto';
 dashSound.preload = 'auto';
 
-// POSICIONES
+// POSICIONES Y VELOCIDADES (CALIBRADAS A 60FPS)
 let adonPosition = { x: 100, y: 100 };
 let gorditoPosition = { x: 400, y: 400 };
 
-const adonSpeed = 45;
-const gorditoSpeed = 0.7;
+let adonSpeed = 1.5;
+let gorditoSpeed = 1.2;
+
+let frameScale = 1;
+let lastFrameTime = 0;
 
 let currentGorditoDir = '';
 let lastAdonDir = 'dir-abajo';
-let adonStopTimeout = null;
+
+// ESTADO DE TECLAS PARA MOVIMIENTO CONTINUO
+const keysPressed = {};
 
 // ESTADO DEL JUEGO
 let gameActive = false;
@@ -65,6 +69,7 @@ function setDirection(element, dirClass) {
             'dir-izquierda',
             'dir-derecha',
             'dir-reposo',
+            'dir-risa',
             'dir-mecanse',
             'dir-llorando',
             'dir-celebrar'
@@ -79,6 +84,11 @@ function setDirection(element, dirClass) {
 // ==========================================
 
 function startGame() {
+
+    // LIMPIAR ESTADO DE TECLAS
+    for (let key in keysPressed) {
+        delete keysPressed[key];
+    }
 
     // REINICIAR PERSONAJES
     adonPosition = { x: 100, y: 100 };
@@ -97,7 +107,6 @@ function startGame() {
 
     // REINICIAR DASH
     clearTimeout(dashCooldownTimeout);
-    clearTimeout(adonStopTimeout);
     isDashOnCooldown = false;
 
     // INICIAR PARTIDA
@@ -122,7 +131,7 @@ function startGame() {
 btnStart.addEventListener('click', startGame);
 
 // ==========================================
-// CANSANCIO DE GORDITO
+// CANSANCIO DE GORDITO Y RISA DE ADON
 // ==========================================
 
 function startGorditoCycle() {
@@ -138,8 +147,12 @@ function startGorditoCycle() {
 
         isGorditoTired = true;
 
+        // GORDITO SE CANSA Y ADON SE QUEDA PARADO BURLÁNDOSE
         gordito.classList.remove('walking');
         setDirection(gordito, 'dir-mecanse');
+
+        adon.classList.remove('walking');
+        setDirection(adon, 'dir-risa');
 
         // AUDIO DE RISA
         risaSound.currentTime = 0;
@@ -155,6 +168,9 @@ function startGorditoCycle() {
             isGorditoTired = false;
             currentGorditoDir = '';
 
+            // RESTAURAR ESTADO DE ADON
+            setDirection(adon, 'dir-reposo');
+
             startGorditoCycle();
 
         }, 3000);
@@ -163,20 +179,19 @@ function startGorditoCycle() {
 }
 
 // ==========================================
-// CONTROLES DE ADON
+// EVENTOS DE TECLADO (KEYDOWN / KEYUP)
 // ==========================================
 
 window.addEventListener('keydown', (event) => {
 
-    // NO MOVER SI LA PARTIDA NO HA INICIADO
     if (!gameActive) return;
 
-    // DASH CON SHIFT
+    // DASH CON SHIFT (BLOQUEADO SI GORDITO ESTÁ CANSADO)
     if (event.key === 'Shift') {
 
         event.preventDefault();
 
-        if (isDashOnCooldown || event.repeat) return;
+        if (isGorditoTired || isDashOnCooldown || event.repeat) return;
 
         isDashOnCooldown = true;
 
@@ -205,20 +220,6 @@ window.addEventListener('keydown', (event) => {
                 break;
         }
 
-        setDirection(adon, lastAdonDir);
-        adon.classList.add('walking');
-
-        clearTimeout(adonStopTimeout);
-
-        adonStopTimeout = setTimeout(() => {
-
-            if (gameActive) {
-                adon.classList.remove('walking');
-                setDirection(adon, 'dir-reposo');
-            }
-
-        }, 250);
-
         clampAdonPosition();
         updatePositions();
         checkCollision();
@@ -230,57 +231,73 @@ window.addEventListener('keydown', (event) => {
         return;
     }
 
-    // MOVIMIENTO NORMAL
-    let dir = null;
+    // REGISTRAR TECLAS DE DIRECCIÓN PRESIONADAS
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+        event.preventDefault();
+        keysPressed[event.key] = true;
+    }
+});
 
-    switch (event.key) {
+window.addEventListener('keyup', (event) => {
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+        keysPressed[event.key] = false;
+    }
+});
 
-        case 'ArrowUp':
-            adonPosition.y -= adonSpeed;
-            dir = 'dir-arriba';
-            break;
+// ==========================================
+// MOVIMIENTO DE ADON
+// ==========================================
 
-        case 'ArrowDown':
-            adonPosition.y += adonSpeed;
-            dir = 'dir-abajo';
-            break;
+function moveAdon() {
 
-        case 'ArrowLeft':
-            adonPosition.x -= adonSpeed;
-            dir = 'dir-izquierda';
-            break;
+    if (!gameActive) return;
 
-        case 'ArrowRight':
-            adonPosition.x += adonSpeed;
-            dir = 'dir-derecha';
-            break;
-
-        default:
-            return;
+    // BLOQUEAR MOVIMIENTO SI GORDITO ESTÁ CANSADO 
+    if (isGorditoTired) {
+        adon.classList.remove('walking');
+        setDirection(adon, 'dir-risa');
+        return;
     }
 
-    event.preventDefault();
+    let isMoving = false;
+    let dir = null;
 
-    lastAdonDir = dir;
+    const adonStep = adonSpeed * frameScale;
 
-    setDirection(adon, dir);
-    adon.classList.add('walking');
+    if (keysPressed['ArrowUp']) {
+        adonPosition.y -= adonStep;
+        dir = 'dir-arriba';
+        isMoving = true;
+    } else if (keysPressed['ArrowDown']) {
+        adonPosition.y += adonStep;
+        dir = 'dir-abajo';
+        isMoving = true;
+    }
 
-    clearTimeout(adonStopTimeout);
+    if (keysPressed['ArrowLeft']) {
+        adonPosition.x -= adonStep;
+        dir = 'dir-izquierda';
+        isMoving = true;
+    } else if (keysPressed['ArrowRight']) {
+        adonPosition.x += adonStep;
+        dir = 'dir-derecha';
+        isMoving = true;
+    }
 
-    adonStopTimeout = setTimeout(() => {
+    if (isMoving) {
+        lastAdonDir = dir;
+        setDirection(adon, dir);
+        adon.classList.add('walking');
 
-        if (gameActive) {
-            adon.classList.remove('walking');
-            setDirection(adon, 'dir-reposo');
-        }
+        clampAdonPosition();
+        updatePositions();
+        checkCollision();
 
-    }, 200);
-
-    clampAdonPosition();
-    updatePositions();
-    checkCollision();
-});
+    } else {
+        adon.classList.remove('walking');
+        setDirection(adon, 'dir-reposo');
+    }
+}
 
 // ==========================================
 // LÍMITES DEL ESCENARIO
@@ -300,7 +317,7 @@ function clampAdonPosition() {
 }
 
 // ==========================================
-// MOVIMIENTO DE GORDITO
+// MOVIMIENTO DE GORDITO 
 // ==========================================
 
 function moveGordito() {
@@ -315,32 +332,22 @@ function moveGordito() {
 
     let deltaX = adonPosition.x - gorditoPosition.x;
     let deltaY = adonPosition.y - gorditoPosition.y;
+    let distance = Math.hypot(deltaX, deltaY);
 
-    if (gorditoPosition.x < adonPosition.x) {
-        gorditoPosition.x += gorditoSpeed;
-    } else if (gorditoPosition.x > adonPosition.x) {
-        gorditoPosition.x -= gorditoSpeed;
-    }
-
-    if (gorditoPosition.y < adonPosition.y) {
-        gorditoPosition.y += gorditoSpeed;
-    } else if (gorditoPosition.y > adonPosition.y) {
-        gorditoPosition.y -= gorditoSpeed;
+    if (distance > 0) {
+        const gorditoStep = gorditoSpeed * frameScale;
+        gorditoPosition.x += (deltaX / distance) * gorditoStep;
+        gorditoPosition.y += (deltaY / distance) * gorditoStep;
     }
 
     gordito.classList.add('walking');
 
     let targetDir = currentGorditoDir;
 
-    if (Math.abs(deltaX) > Math.abs(deltaY) + 8) {
-        targetDir = deltaX > 0
-            ? 'dir-derecha'
-            : 'dir-izquierda';
-
-    } else if (Math.abs(deltaY) > Math.abs(deltaX) + 8) {
-        targetDir = deltaY > 0
-            ? 'dir-abajo'
-            : 'dir-arriba';
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        targetDir = deltaX > 0 ? 'dir-derecha' : 'dir-izquierda';
+    } else {
+        targetDir = deltaY > 0 ? 'dir-abajo' : 'dir-arriba';
     }
 
     if (targetDir && targetDir !== currentGorditoDir) {
@@ -353,7 +360,7 @@ function moveGordito() {
 }
 
 // ==========================================
-// ACTUALIZAR POSICIONES
+// ACTUALIZAR POSICIONES EN EL DOM
 // ==========================================
 
 function updatePositions() {
@@ -375,9 +382,12 @@ function finishGame(victory) {
 
     gameActive = false;
 
+    for (let key in keysPressed) {
+        delete keysPressed[key];
+    }
+
     clearTimeout(gorditoTiredTimeout);
     clearTimeout(gorditoResumeTimeout);
-    clearTimeout(adonStopTimeout);
     clearTimeout(dashCooldownTimeout);
 
     bgMusic.pause();
@@ -392,7 +402,7 @@ function finishGame(victory) {
     if (victory) {
 
         // ADON SOBREVIVIÓ 35 SEGUNDOS
-        setDirection(adon, 'dir-reposo');
+        setDirection(adon, 'dir-risa');
         setDirection(gordito, 'dir-mecanse');
 
     } else {
@@ -455,7 +465,12 @@ function checkCollision() {
 // CICLO DEL JUEGO Y CONTADOR
 // ==========================================
 
-function gameLoop() {
+function gameLoop(now = performance.now()) {
+
+    if (lastFrameTime) {
+        frameScale = Math.min((now - lastFrameTime) / (1000 / 60), 3);
+    }
+    lastFrameTime = now;
 
     if (gameActive) {
 
@@ -476,6 +491,7 @@ function gameLoop() {
 
         } else {
 
+            moveAdon();
             moveGordito();
         }
     }
@@ -483,9 +499,43 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-// ==========================================
+// =======================
+// PANEL DE CONFIGURACIÓN 
+// =======================
+
+const adonSpeedInput = document.getElementById('adon-speed-input');
+const gorditoSpeedInput = document.getElementById('gordito-speed-input');
+const volumeInput = document.getElementById('volume-input');
+
+// LOS SLIDERS ARRANCAN CON LOS VALORES REALES DEL JUEGO
+if (adonSpeedInput) adonSpeedInput.value = adonSpeed;
+if (gorditoSpeedInput) gorditoSpeedInput.value = gorditoSpeed;
+
+if (adonSpeedInput) {
+    adonSpeedInput.addEventListener('input', (e) => {
+        adonSpeed = parseFloat(e.target.value);
+    });
+}
+
+if (gorditoSpeedInput) {
+    gorditoSpeedInput.addEventListener('input', (e) => {
+        gorditoSpeed = parseFloat(e.target.value);
+    });
+}
+
+if (volumeInput) {
+    volumeInput.addEventListener('input', (e) => {
+        const vol = parseFloat(e.target.value);
+        bgMusic.volume = vol;
+        risaSound.volume = vol;
+        loserSound.volume = vol;
+        dashSound.volume = vol;
+    });
+}
+
+// ================
 // INICIAR EL MENÚ
-// ==========================================
+// ================
 
 setDirection(adon, 'dir-reposo');
 setDirection(gordito, 'dir-reposo');
